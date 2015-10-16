@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PathFinder", "PathFinder\PathFinder.csproj", "{2AA9A17B-A275-4570-82C1-3E36A0B14F08}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{8DCFFF17-6366-4F5D-95CB-B0CA32F0129D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PathfindingAlgorithms", "PathfindingAlgorithms\PathfindingAlgorithms.csproj", "{B9889B91-68A5-4E55-B029-2C9832739A93}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2AA9A17B-A275-4570-82C1-3E36A0B14F08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AA9A17B-A275-4570-82C1-3E36A0B14F08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AA9A17B-A275-4570-82C1-3E36A0B14F08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AA9A17B-A275-4570-82C1-3E36A0B14F08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DCFFF17-6366-4F5D-95CB-B0CA32F0129D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DCFFF17-6366-4F5D-95CB-B0CA32F0129D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DCFFF17-6366-4F5D-95CB-B0CA32F0129D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DCFFF17-6366-4F5D-95CB-B0CA32F0129D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9889B91-68A5-4E55-B029-2C9832739A93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9889B91-68A5-4E55-B029-2C9832739A93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9889B91-68A5-4E55-B029-2C9832739A93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9889B91-68A5-4E55-B029-2C9832739A93}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
