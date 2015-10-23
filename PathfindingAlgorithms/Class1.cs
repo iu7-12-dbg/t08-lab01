@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace PathfindingAlgorithms
 {
-    public class Class1
+    public interface IPathFindingAlgorithm
     {
+        IEnumerable<ICell> Process(IList<IList<ICell>>);
     }
 }
