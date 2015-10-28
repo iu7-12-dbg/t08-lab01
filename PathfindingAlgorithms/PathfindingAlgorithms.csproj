@@ -41,8 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Algorithms\Dijkstra.cs" />
+    <Compile Include="MatrixExtension.cs" />
+    <Compile Include="Cells\Coordinates.cs" />
     <Compile Include="Cells\ICell.cs" />
-    <Compile Include="IPathFindingAlgorithm.cs" />
+    <Compile Include="Algorithms\IPathFindingAlgorithm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

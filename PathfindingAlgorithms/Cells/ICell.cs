@@ -9,9 +9,7 @@ namespace PathfindingAlgorithms.Cells
     public interface ICell
     {
         double Weight { get; set; }
-
-        int Row { get; }
-
-        int Column { get; }
+        
+        Coordinates Coordinates { get; }
     }
 }
