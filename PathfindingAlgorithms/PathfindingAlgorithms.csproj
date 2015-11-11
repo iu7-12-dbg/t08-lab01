@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Algorithms\Astar.cs" />
     <Compile Include="Algorithms\Dijkstra.cs" />
     <Compile Include="MatrixExtension.cs" />
     <Compile Include="Cells\Coordinates.cs" />
