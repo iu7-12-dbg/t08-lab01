@@ -7,178 +7,111 @@ using PathfindingAlgorithms.Cells;
 
 namespace PathfindingAlgorithms.Algorithms
 {
-	using UGrid = IList<IList<ICell>>;
-	class Grid
+	using CellGrid = IList<IList<ICell>>;
+
+	public class Astar : IPathFindingAlgorithm
 	{
-		public List<ICell> cells;
-		public int m,n,len;
-		public Grid(UGrid cellsGrid)
-		{
-			m = cellsGrid.Count;
-			n = cellsGrid[0].Count;
-			len = m*n;
-			cells = new List<ICell>( len );
+		public static readonly Coordinates nilCoord = new Coordinates( -1, -1 );
 
-			for ( int i = 0; i < m; ++i )
-				for ( int j = 0; j < n; ++j )
-					cells.Add( cellsGrid[i][j] );
-		}
-		public ICell GetCell(int x, int y)
+		class CellData
 		{
-			if ( x < 0 || x >= n || y < 0 || y >= m )
-				return null;
-			return cells[GetIndex(x,y)];
-		}
-		public ICell GetCell(Coordinates c)
-		{
-			return GetCell( c.X, c.Y );
+			public float scoreCalc = -1, scoreHeur = -1;
+			public bool processed  = false;
+			public Coordinates cameFrom = nilCoord;
 		}
 
-		public int GetIndex(int x, int y)
+		Coordinates goalCoord;
+
+		float Heuristic(Coordinates c)
 		{
-			if ( x < 0 || x >= n || y < 0 || y >= m )
-				return -1;
-			return x + n*y;
-		}
-		public int GetIndex(Coordinates c)
-		{
-			return GetIndex( c.X, c.Y );
+			return CalcDistance( c, goalCoord );
 		}
 
-		public Coordinates GetCoordinates(int index)
+		public IEnumerable<ICell> Process(CellGrid grid, Coordinates startCoord, Coordinates goalCoord)
 		{
-			if ( index < 0 || index >= len )
-				return new Coordinates(-1,-1);
+			this.goalCoord = goalCoord;
 
-			Coordinates c = new Coordinates( index / n, index % n );
-			return c;
-		}
+			var data = new List<IList<CellData>>();
+			for ( int x = 0; x < grid.Count; ++x )
+			{
+				data.Add( new List<CellData>() );
+				for ( int y = 0; y < grid[0].Count; ++y )
+				{
+					data[x].Add( new CellData() );
+				}
+			}
+			data.At( startCoord ).scoreCalc = 0;
+			data.At( startCoord ).scoreHeur = Heuristic( startCoord );
 
-		public List<ICell> GetAdjacents(int x, int y)
-		{
-			var res = new List<ICell>( 4 );
-			ICell c;
-			if ( (c = GetCell( x-1, y )) != null ) res.Add( c );
-			if ( (c = GetCell( x+1, y )) != null ) res.Add( c );
-			if ( (c = GetCell( x, y-1 )) != null ) res.Add( c );
-			if ( (c = GetCell( x, y+1 )) != null ) res.Add( c );
-			return res;
-		}
-		public List<ICell> GetAdjacents(int index)
-		{
-			Coordinates c = GetCoordinates( index );
-			return GetAdjacents( c.X, c.Y );
-		}
-	}
-
-	class Astar : IPathFindingAlgorithm
-	{
-		List<float> scoreCalc;	//рассчитанная стоимость до каждой вершины от старта
-		List<float> scoreHeur;	//эвристическая оценка стоимости до каждой вершины от конца
-
-		List<bool> processed;	//обработана ли вершина
-		List<int> cameFrom;		//из какой вершины пришли в данную
-
-		Grid grid;
-
-		ICell start, goal;
-		int start_index, goal_index;
-
-		void Init(UGrid cellsGrid, Coordinates startCoord, Coordinates goalCoord)
-		{
-			int len = grid.m * grid.n;
-
-			scoreCalc = FillList<float>( len, -1 );
-			scoreHeur = FillList<float>( len, -1 );
-			processed = FillList<bool>( len, false );
-			cameFrom = FillList<int>( len, -1 );
-
-			start = grid.GetCell(startCoord);
-			start_index = grid.GetIndex( startCoord );
-			goal = grid.GetCell( goalCoord );
-			goal_index = grid.GetIndex( goalCoord );
-		}
-
-		float Heuristic(ICell c)
-		{
-			return CalcDistance( c.Coordinates, goal.Coordinates );
-		}
-
-		public IEnumerable<ICell> Process(UGrid cellsGrid, Coordinates startCoord, Coordinates goalCoord)
-		{
-			Init( cellsGrid, startCoord, goalCoord );
-
-			scoreCalc[start_index] = 0;
-			scoreHeur[goal_index] = Heuristic( start );
-
-			var q = new LinkedList<int>();
-			q.AddLast( start_index );
-
+			var q = new LinkedList<Coordinates>();
+			q.AddLast( startCoord );
 			while ( q.Count > 0 )
 			{
-				//находим вершину с наименьшей эвристической стоимостью
-				int cur = q.First();
-				float minHeur = scoreHeur[cur];
-				foreach ( var e in q )
+				//находим в запланированных вершину с наименьшей эвристической стоимостью
+				Coordinates cur = q.First();
+				float minHeur = data.At(cur).scoreHeur;
+				foreach ( Coordinates e in q )
 				{
-					if ( scoreHeur[e] < minHeur )
+					if ( data.At(e).scoreHeur < minHeur )
 					{
 						cur = e;
-						minHeur = scoreHeur[e];
+						minHeur = data.At( e ).scoreHeur;
 					}
 				}
 
 				//если найденная - пункт назначения, то заканчиваем поиск и начинаем сборку пути
-				if ( cur == goal_index )
+				if ( cur == goalCoord )
 					break;
 
 				q.Remove( cur );
-				processed[cur] = true;
+
+				CellData curData = data.At( cur );
+				curData.processed = true;
 
 				//рассматриваем все с ней смежные, необработанные ранее
-				var adjList = grid.GetAdjacents( cur );
-				foreach (var adj in adjList)
+				var adjList = GetAdjacents( grid, cur );
+				foreach ( Coordinates adj in adjList.Where( c => !data.At( c ).processed ) )
 				{
-					int adjIndex = grid.GetIndex( adj.Coordinates );
-					if ( processed[adjIndex] )
-						continue;
-
 					//определяем стоимость смежной вершины на основе уже пройденного пути
-					float score = scoreCalc[cur] + CalcDistance( grid.cells[cur].Coordinates, adj.Coordinates );
+					float score = curData.scoreCalc + CalcDistance( cur, adj );
 
 					//если вершина не была посещена, или в неё можно прийти более коротким путём - обновляем информацию
-					bool notFound = !q.Contains( adjIndex );
-					if ( notFound || score < scoreCalc[adjIndex] )
+					bool notFound = !q.Contains( adj );
+					CellData adjData = data.At( adj );
+					if ( notFound || score < adjData.scoreCalc )
 					{
-						cameFrom[adjIndex] = cur;
-						scoreCalc[adjIndex] = score;
-						scoreHeur[adjIndex] = score + Heuristic(adj);
+						adjData.cameFrom = cur;
+						adjData.scoreCalc = score;
+						adjData.scoreHeur = score + Heuristic( adj );
 
 						//если вершина ещё не была посещена - запланируем посещение
 						if ( notFound )
-							q.AddLast( adjIndex );
+							q.AddLast( adj );
 					}
 				}
 			}
 
 			var res = new LinkedList<ICell>();
-			int pos = goal_index;
-			while ( pos != -1 )
+			Coordinates pos = goalCoord;
+			while (pos != nilCoord)
 			{
-				res.AddFirst( grid.cells[pos] );
-				pos = cameFrom[pos];
+				res.AddFirst( grid[pos.X][pos.Y] );
+				pos = data.At(pos).cameFrom;
 			}
 			return res;
 		}
 
 		//////////////////////////////////////////////////////////////////////////
 
-		static List<T> FillList<T>(int count, T val)
+
+		static List<Coordinates> GetAdjacents(IList<IList<ICell>> grid, Coordinates at)
 		{
-			var l = new List<T>( count );
-			for ( int i = 0; i < count; ++i )
-				l[i] = val;
-			return l;
+			var res = new List<Coordinates>( 4 );
+			if ( at.Y > 0 ) res.Add( grid[at.X][at.Y-1].Coordinates );
+			if ( at.X > 0 ) res.Add( grid[at.X-1][at.Y].Coordinates );
+			if ( at.Y < grid[0].Count-1 ) res.Add( grid[at.X][at.Y+1].Coordinates );
+			if ( at.X < grid.Count-1 ) res.Add( grid[at.X+1][at.Y].Coordinates );
+			return res;
 		}
 
 		static float CalcDistance(Coordinates from, Coordinates to)

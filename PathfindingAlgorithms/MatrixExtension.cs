@@ -21,5 +21,11 @@ namespace PathfindingAlgorithms
             var y = (x != -1) ? matrix[x].Count - 1 : -1;
             return new Coordinates(x, y);
         }
+
+
+		public static T At<T>(this IList<IList<T>> matrix, Coordinates c)
+		{
+			return matrix[c.X][c.Y];
+		}
     }
 }
