@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 
 namespace PathfindingAlgorithms.Cells
 {
-    public struct Coordinates
+    public struct Coordinates : IEquatable<Coordinates>
     { 
         public int X { get; set; }
 
         public int Y { get; set; }
 
         public Coordinates(int x, int y)
+			: this()
         {
             X = x;
             Y = y;
@@ -39,6 +40,25 @@ namespace PathfindingAlgorithms.Cells
             return this >= min && this <= max;
         }
 
+        public override bool Equals(object obj)
+        {
+            var other = obj as Coordinates?;
+            if (!other.HasValue)
+                return false;
+            else
+                return Equals(other.Value);
+        }
+
+        public override int GetHashCode()
+        {
+            return X ^ Y;
+        }
+
+        public bool Equals(Coordinates other)
+        {
+            return X == other.X && Y == other.Y;
+        }
+
         public static bool operator<(Coordinates a, Coordinates b)
         {
             return a.X < b.X && a.Y < b.Y;
@@ -58,5 +78,15 @@ namespace PathfindingAlgorithms.Cells
         {
             return a.X >= b.X && a.Y >= b.Y;
         }
+
+		public static bool operator==(Coordinates a, Coordinates b)
+		{
+			return a.X == b.X && a.Y == b.Y;
+		}
+
+		public static bool operator!=(Coordinates a, Coordinates b)
+		{
+			return a.X != b.X || a.Y != b.Y;
+		}
     }
 }
