@@ -13,6 +13,7 @@ namespace PathfindingAlgorithms.Cells
         public int Y { get; set; }
 
         public Coordinates(int x, int y)
+			: this()
         {
             X = x;
             Y = y;
@@ -77,5 +78,15 @@ namespace PathfindingAlgorithms.Cells
         {
             return a.X >= b.X && a.Y >= b.Y;
         }
+
+		public static bool operator==(Coordinates a, Coordinates b)
+		{
+			return a.X == b.X && a.Y == b.Y;
+		}
+
+		public static bool operator!=(Coordinates a, Coordinates b)
+		{
+			return a.X != b.X || a.Y != b.Y;
+		}
     }
 }
