@@ -17,7 +17,7 @@ namespace PathfindingAlgorithms.Algorithms
                 prev = null;
             }
             public double val;
-            public Tuple<int, int> prev;
+            public Coordinates? prev;
         }
 
         protected void CheckForeign(IList<IList<ICell>> CM, DNode[][] D, int f, int s)
@@ -30,7 +30,7 @@ namespace PathfindingAlgorithms.Algorithms
                 if (w < D[f - 1][s].val)
                 {
                     D[f - 1][s].val = w;
-                    D[f - 1][s].prev = new Tuple<int, int>(f, s);
+                    D[f - 1][s].prev = new Coordinates(f, s);
                 }
             }
             //bottom
@@ -40,7 +40,7 @@ namespace PathfindingAlgorithms.Algorithms
                 if (w < D[f + 1][s].val)
                 {
                     D[f + 1][s].val = w;
-                    D[f + 1][s].prev = new Tuple<int, int>(f, s);
+                    D[f + 1][s].prev = new Coordinates(f, s);
                 }
             }
             //left
@@ -50,7 +50,7 @@ namespace PathfindingAlgorithms.Algorithms
                 if (w < D[f][s - 1].val)
                 {
                     D[f][s - 1].val = w;
-                    D[f][s - 1].prev = new Tuple<int, int>(f, s);
+                    D[f][s - 1].prev = new Coordinates(f, s);
                 }
             }
             //right
@@ -60,16 +60,16 @@ namespace PathfindingAlgorithms.Algorithms
                 if (w < D[f][s + 1].val)
                 {
                     D[f][s + 1].val = w;
-                    D[f][s + 1].prev = new Tuple<int, int>(f, s);
+                    D[f][s + 1].prev = new Coordinates(f, s);
                 }
             }
         }
 
-        public IEnumerable<ICell> Process(IList<IList<ICell>> CellMap, Tuple<int, int> start, Tuple<int, int> end)
+        public IEnumerable<ICell> Process(IList<IList<ICell>> CellMap, Coordinates start, Coordinates end)
         {
-            if (start.Item1 < 0 || start.Item2 < 0 || start.Item1 >= CellMap.Count || start.Item2 >= CellMap[start.Item1].Count)
+            if (start.X < 0 || start.Y < 0 || start.X >= CellMap.Count || start.Y >= CellMap[start.X].Count)
                 throw new ArgumentOutOfRangeException("start");
-            if (end.Item1 < 0 || end.Item2 < 0 || end.Item1 >= CellMap.Count || end.Item2 >= CellMap[end.Item1].Count)
+            if (end.X < 0 || end.Y < 0 || end.X >= CellMap.Count || end.Y >= CellMap[end.X].Count)
                 throw new ArgumentOutOfRangeException("end");
 
             DNode[][] dist = new DNode[CellMap.Count][];
@@ -89,34 +89,34 @@ namespace PathfindingAlgorithms.Algorithms
 
             while (count-- > 0)
             {
-                Tuple<int, int> min = new Tuple<int, int>(0, 0);
+                Coordinates min = new Coordinates(0, 0);
                 for (int i = 0; i < dist.Length; ++i)
                     for (int j = 0; j < dist[i].Length; ++j)
                     {
-                        if (dist[i][j].val < dist[min.Item1][min.Item2].val)
-                            min = new Tuple<int, int>(i, j);
+                        if (dist[i][j].val < dist[min.X][min.Y].val)
+                            min = new Coordinates(i, j);
                     }
-                CheckForeign(CellMap, dist, min.Item1, min.Item2);
+                CheckForeign(CellMap, dist, min.X, min.Y);
             }
 
             int waylen = 0;
-            DNode dnode = dist[end.Item1][end.Item2];
-            while (dnode.prev != null)
+            DNode dnode = dist[end.X][end.Y];
+            while (dnode.prev.HasValue)
             {
                 ++waylen;
-                dnode = dist[dnode.prev.Item1][dnode.prev.Item2];
+                dnode = dist[dnode.prev.Value.X][dnode.prev.Value.Y];
             }
 
             if (waylen > 0)
             {
                 ICell[] res = new ICell[waylen];
-                res[waylen - 1] = CellMap[end.Item1][end.Item2];
+                res[waylen - 1] = CellMap[end.X][end.Y];
                 int i = waylen - 2;
-                dnode = dist[end.Item1][end.Item2];
-                while (dnode.prev != null)
+                dnode = dist[end.X][end.Y];
+                while (dnode.prev.HasValue)
                 {
-                    res[i--] = CellMap[dnode.prev.Item1][dnode.prev.Item2];
-                    dnode = dist[dnode.prev.Item1][dnode.prev.Item2];
+                    res[i--] = CellMap[dnode.prev.Value.X][dnode.prev.Value.Y];
+                    dnode = dist[dnode.prev.Value.X][dnode.prev.Value.Y];
                 }
                 return res;
             }
