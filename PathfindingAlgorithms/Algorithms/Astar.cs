@@ -22,9 +22,16 @@ namespace PathfindingAlgorithms.Algorithms
 
 		Coordinates goalCoord;
 
-		float Heuristic(Coordinates c)
+		float Heuristic(ICell c)
 		{
-			return CalcDistance( c, goalCoord );
+			return CalcDistance( c.Coordinates, goalCoord );
+		}
+		float Score(ICell from, ICell to)
+		{
+			/*if ( to.Weight > 1 )
+				return 999999.0f;
+			else*/
+				return (float)to.Weight;
 		}
 
 		public IEnumerable<ICell> Process(CellGrid grid, Coordinates startCoord, Coordinates goalCoord)
@@ -41,7 +48,7 @@ namespace PathfindingAlgorithms.Algorithms
 				}
 			}
 			data.At( startCoord ).scoreCalc = 0;
-			data.At( startCoord ).scoreHeur = Heuristic( startCoord );
+			data.At( startCoord ).scoreHeur = Heuristic( grid.At(startCoord) );
 
 			var q = new LinkedList<Coordinates>();
 			q.AddLast( startCoord );
@@ -73,7 +80,7 @@ namespace PathfindingAlgorithms.Algorithms
 				foreach ( Coordinates adj in adjList.Where( c => !data.At( c ).processed ) )
 				{
 					//определяем стоимость смежной вершины на основе уже пройденного пути
-					float score = curData.scoreCalc + CalcDistance( cur, adj );
+					float score = curData.scoreCalc + Score( grid.At(cur), grid.At(adj) );
 
 					//если вершина не была посещена, или в неё можно прийти более коротким путём - обновляем информацию
 					bool notFound = !q.Contains( adj );
@@ -82,7 +89,7 @@ namespace PathfindingAlgorithms.Algorithms
 					{
 						adjData.cameFrom = cur;
 						adjData.scoreCalc = score;
-						adjData.scoreHeur = score + Heuristic( adj );
+						adjData.scoreHeur = score + Heuristic( grid.At(adj) );
 
 						//если вершина ещё не была посещена - запланируем посещение
 						if ( notFound )
