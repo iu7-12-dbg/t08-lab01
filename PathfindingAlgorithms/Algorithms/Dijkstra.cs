@@ -9,7 +9,7 @@ namespace PathfindingAlgorithms.Algorithms
 {
     class Dijkstra : IPathFindingAlgorithm
     {
-        public IEnumerable<ICell> Process(IList<IList<ICell>> CellMap, Coordinates start, Coordinates end)
+        public IEnumerable<ICell> Process(Coordinates[,] CellMap, Coordinates start, Coordinates end)
         {
             throw new NotImplementedException();
         }
