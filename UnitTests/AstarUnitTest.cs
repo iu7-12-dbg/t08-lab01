@@ -30,16 +30,15 @@ namespace UnitTests
 		int gridWidth = 4;
 		int gridHeight = 8;
 
-		IList<IList<ICell>> GetTestGrid()
+		ICell[,] GetTestGrid()
 		{
-			var r = new List<IList<ICell>>();
+			var r = new ICell[gridWidth,gridHeight];
 			for ( int x = 0; x < gridWidth; ++x )
 			{
-				r.Add( new List<ICell>() );
 				for ( int y = 0; y < gridHeight; ++y )
 				{
 					var c = new Cell(x,y);
-					r[x].Add( c );
+					r[x,y] = c;
 				}
 			}
 			return r;
@@ -54,14 +53,14 @@ namespace UnitTests
 
 			var path = (LinkedList<ICell>)a.Process( grid, new Coordinates( 0, 0 ), new Coordinates( gridWidth-1, gridHeight-1 ) );
 
-			Assert.IsTrue( path.First.Value.Coordinates == grid[0][0].Coordinates, "LT-RB: first coord" );
-			Assert.IsTrue( path.Last.Value.Coordinates == grid[gridWidth-1][gridHeight-1].Coordinates, "LT-RB: last coord" );
+			Assert.IsTrue( path.First.Value.Coordinates == grid[0, 0].Coordinates, "LT-RB: first coord" );
+			Assert.IsTrue( path.Last.Value.Coordinates == grid[gridWidth-1, gridHeight-1].Coordinates, "LT-RB: last coord" );
 
 
 			path = (LinkedList<ICell>)a.Process( grid, new Coordinates( 1, 1 ), new Coordinates( 1, 1 ) );
 
-			Assert.IsTrue( path.First.Value.Coordinates == grid[1][1].Coordinates, "Same-Same: first coord" );
-			Assert.IsTrue( path.Last.Value.Coordinates == grid[1][1].Coordinates, "Same-Same: last coord" );
+			Assert.IsTrue( path.First.Value.Coordinates == grid[1, 1].Coordinates, "Same-Same: first coord" );
+			Assert.IsTrue( path.Last.Value.Coordinates == grid[1, 1].Coordinates, "Same-Same: last coord" );
 		}
 
         [TestMethod]

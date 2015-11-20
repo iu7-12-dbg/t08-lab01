@@ -14,7 +14,7 @@ namespace GridViewer
 	public partial class Form1 : Form
 	{
 		int allwidth, allheight, cellW, cellH;
-		int gridWcount, gridHcount;
+		int gridWcount = 8, gridHcount = 5;
 
 		class Cell : UserControl, ICell
 		{
@@ -105,15 +105,15 @@ namespace GridViewer
 			allwidth = this.ClientRectangle.Width;
 			allheight = this.ClientRectangle.Height;
 
-			gridWcount = 8;
-			gridHcount = 5;
 			cellW = allwidth / gridWcount;
 			cellH = allheight / gridHcount;
+			
+			cells = new ICell[gridWcount, gridHcount];
 		}
 
 		Coordinates start, goal;
 		Cell startSelected = null;
-		List<IList<ICell>> cells = new List<IList<ICell>>();
+		ICell[,] cells;
 		Astar astar = new Astar();
 
 		IEnumerable<ICell> pathCells = null;
@@ -126,7 +126,6 @@ namespace GridViewer
 			Random r = new Random();
 			for ( int x = 0; x < gridWcount; ++x )
 			{
-				cells.Add( new List<ICell>() );
 				for ( int y = 0; y < gridHcount; ++y )
 				{
 					int wInt = r.Next() % 6;
@@ -150,7 +149,7 @@ namespace GridViewer
 								startSelected = null;
 							}
 						};
-					cells[x].Add( c );
+					cells[x,y] = c;
 					this.Controls.Add( c );
 				}
 			}

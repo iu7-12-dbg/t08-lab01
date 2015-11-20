@@ -36,7 +36,12 @@ namespace PathfindingAlgorithms.Algorithms
 		{
 			this.goalCoord = goalCoord;
 
-            var data = new CellData[grid.GetLength(0), grid.GetLength(1)];
+			int xsize = grid.GetLength(0), ysize = grid.GetLength(1);
+			var data = new CellData[xsize, ysize];
+			for ( int x = 0; x < xsize; ++x )
+				for ( int y = 0; y < ysize; ++y )
+					data[x, y] = new CellData();
+
 			data.At( startCoord ).scoreCalc = 0;
 			data.At( startCoord ).scoreHeur = Heuristic( grid.At(startCoord) );
 
@@ -45,7 +50,7 @@ namespace PathfindingAlgorithms.Algorithms
 			while ( q.Count > 0 )
 			{
 				//находим в запланированных вершину с наименьшей эвристической стоимостью
-				Coordinates cur = q.First();
+				Coordinates cur = q.First.Value;
 				float minHeur = data.At(cur).scoreHeur;
 				foreach ( Coordinates e in q )
 				{
@@ -66,7 +71,7 @@ namespace PathfindingAlgorithms.Algorithms
 				curData.processed = true;
 
 				//рассматриваем все с ней смежные, необработанные ранее
-				var adjList = GetAdjacents( grid, cur );
+				var adjList = GetAdjacent( grid, cur );
 				foreach ( Coordinates adj in adjList.Where( c => !data.At( c ).processed ) )
 				{
 					//определяем стоимость смежной вершины на основе уже пройденного пути
@@ -92,7 +97,7 @@ namespace PathfindingAlgorithms.Algorithms
 			Coordinates pos = goalCoord;
 			while (pos != nilCoord)
 			{
-				res.AddFirst( grid[pos.X][pos.Y] );
+				res.AddFirst( grid.At(pos) );
 				pos = data.At(pos).cameFrom;
 			}
 			return res;
@@ -104,10 +109,13 @@ namespace PathfindingAlgorithms.Algorithms
 		static List<Coordinates> GetAdjacent(ICell[,] grid, Coordinates at)
 		{
 			var res = new List<Coordinates>( 4 );
-			if ( at.Y > 0 ) res.Add( grid[at.X][at.Y-1].Coordinates );
-			if ( at.X > 0 ) res.Add( grid[at.X-1][at.Y].Coordinates );
-			if ( at.Y < grid[0].Count-1 ) res.Add( grid[at.X][at.Y+1].Coordinates );
-			if ( at.X < grid.Count-1 ) res.Add( grid[at.X+1][at.Y].Coordinates );
+
+			int xsize = grid.GetLength( 0 ), ysize = grid.GetLength( 1 );
+			if ( at.Y > 0 ) res.Add( grid[at.X,   at.Y-1].Coordinates );
+			if ( at.X > 0 ) res.Add( grid[at.X-1, at.Y].Coordinates );
+			if ( at.Y < ysize-1 ) res.Add( grid[at.X,   at.Y+1].Coordinates );
+			if ( at.X < xsize-1 ) res.Add( grid[at.X+1, at.Y].Coordinates );
+
 			return res;
 		}
 
@@ -116,5 +124,5 @@ namespace PathfindingAlgorithms.Algorithms
 			return (float)Math.Sqrt( Math.Pow( from.X - to.X, 2 )
 				+ Math.Pow( from.Y - to.Y, 2 ) );
 		}
-    }
+	}
 }
