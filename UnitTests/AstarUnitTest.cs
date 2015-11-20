@@ -63,5 +63,13 @@ namespace UnitTests
 			Assert.IsTrue( path.First.Value.Coordinates == grid[1][1].Coordinates, "Same-Same: first coord" );
 			Assert.IsTrue( path.Last.Value.Coordinates == grid[1][1].Coordinates, "Same-Same: last coord" );
 		}
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void AstarNullCellMapTest()
+        {
+            // arrange, act, assert
+            new Astar().Process(null, new Coordinates(0, 0), new Coordinates(0, 1));
+        }
 	}
 }
