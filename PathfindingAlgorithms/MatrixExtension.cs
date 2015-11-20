@@ -23,9 +23,9 @@ namespace PathfindingAlgorithms
         }
 
 
-		public static T At<T>(this IList<IList<T>> matrix, Coordinates c)
+		public static T At<T>(this T[,] matrix, Coordinates c)
 		{
-			return matrix[c.X][c.Y];
+			return matrix[c.X, c.Y];
 		}
     }
 }

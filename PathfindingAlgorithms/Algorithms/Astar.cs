@@ -7,8 +7,6 @@ using PathfindingAlgorithms.Cells;
 
 namespace PathfindingAlgorithms.Algorithms
 {
-	using CellGrid = IList<IList<ICell>>;
-
 	public class Astar : IPathFindingAlgorithm
 	{
 		public static readonly Coordinates nilCoord = new Coordinates( -1, -1 );
@@ -34,19 +32,11 @@ namespace PathfindingAlgorithms.Algorithms
 				return (float)to.Weight;
 		}
 
-		public IEnumerable<ICell> Process(CellGrid grid, Coordinates startCoord, Coordinates goalCoord)
+		public IEnumerable<ICell> Process(ICell[,] grid, Coordinates startCoord, Coordinates goalCoord)
 		{
 			this.goalCoord = goalCoord;
 
-			var data = new List<IList<CellData>>();
-			for ( int x = 0; x < grid.Count; ++x )
-			{
-				data.Add( new List<CellData>() );
-				for ( int y = 0; y < grid[0].Count; ++y )
-				{
-					data[x].Add( new CellData() );
-				}
-			}
+            var data = new CellData[grid.GetLength(0), grid.GetLength(1)];
 			data.At( startCoord ).scoreCalc = 0;
 			data.At( startCoord ).scoreHeur = Heuristic( grid.At(startCoord) );
 
@@ -111,7 +101,7 @@ namespace PathfindingAlgorithms.Algorithms
 		//////////////////////////////////////////////////////////////////////////
 
 
-		static List<Coordinates> GetAdjacents(IList<IList<ICell>> grid, Coordinates at)
+		static List<Coordinates> GetAdjacent(ICell[,] grid, Coordinates at)
 		{
 			var res = new List<Coordinates>( 4 );
 			if ( at.Y > 0 ) res.Add( grid[at.X][at.Y-1].Coordinates );
@@ -126,5 +116,5 @@ namespace PathfindingAlgorithms.Algorithms
 			return (float)Math.Sqrt( Math.Pow( from.X - to.X, 2 )
 				+ Math.Pow( from.Y - to.Y, 2 ) );
 		}
-	}
+    }
 }
