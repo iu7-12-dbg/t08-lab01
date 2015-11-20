@@ -9,6 +9,6 @@ namespace PathfindingAlgorithms.Algorithms
 {
     public interface IPathFindingAlgorithm
     {
-        IEnumerable<ICell> Process(Coordinates[,] CellMap, Coordinates start, Coordinates end);
+        IEnumerable<ICell> Process(ICell[,] CellMap, Coordinates start, Coordinates end);
     }
 }
