@@ -18,54 +18,73 @@ namespace PathfindingAlgorithms.Algorithms
 			public Coordinates cameFrom = nilCoord;
 		}
 
+		CellData[,] data;
 		Coordinates goalCoord;
+		LinkedList<Coordinates> plannedNodes;
 
+		//эвристическая оценка вершины
 		float Heuristic(ICell c)
 		{
-			return CalcDistance( c.Coordinates, goalCoord );
+			return EuclidianDistance( c.Coordinates, goalCoord );
 		}
-		float Score(ICell from, ICell to)
+
+		//точная оценка вершины
+		float Score(ICell c)
 		{
 			/*if ( to.Weight > 1 )
 				return 999999.0f;
 			else*/
-				return (float)to.Weight;
+				return (float)c.Weight;
 		}
 
-		public IEnumerable<ICell> Process(ICell[,] grid, Coordinates startCoord, Coordinates goalCoord)
+		void InitData(ICell[,] grid, Coordinates startCoord, Coordinates goalCoord)
 		{
 			this.goalCoord = goalCoord;
 
-			int xsize = grid.GetLength(0), ysize = grid.GetLength(1);
-			var data = new CellData[xsize, ysize];
+			int xsize = grid.GetLength( 0 ), ysize = grid.GetLength( 1 );
+			data = new CellData[xsize, ysize];
 			for ( int x = 0; x < xsize; ++x )
 				for ( int y = 0; y < ysize; ++y )
 					data[x, y] = new CellData();
 
 			data.At( startCoord ).scoreCalc = 0;
-			data.At( startCoord ).scoreHeur = Heuristic( grid.At(startCoord) );
+			data.At( startCoord ).scoreHeur = Heuristic( grid.At( startCoord ) );
+		
+			plannedNodes = new LinkedList<Coordinates>();
+		}
 
-			var q = new LinkedList<Coordinates>();
-			q.AddLast( startCoord );
-			while ( q.Count > 0 )
+		//поиск в очереди запланированных вершины с наименьшей эвристической оценкой
+		Coordinates TakeMinimalHeuristic()
+		{
+			//находим в запланированных вершину с наименьшей эвристической стоимостью
+			Coordinates cur = plannedNodes.First.Value;
+			float minHeur = data.At( cur ).scoreHeur;
+			foreach ( Coordinates e in plannedNodes )
 			{
-				//находим в запланированных вершину с наименьшей эвристической стоимостью
-				Coordinates cur = q.First.Value;
-				float minHeur = data.At(cur).scoreHeur;
-				foreach ( Coordinates e in q )
+				if ( data.At( e ).scoreHeur < minHeur )
 				{
-					if ( data.At(e).scoreHeur < minHeur )
-					{
-						cur = e;
-						minHeur = data.At( e ).scoreHeur;
-					}
+					cur = e;
+					minHeur = data.At( e ).scoreHeur;
 				}
+			}
+			plannedNodes.Remove( cur );
+			return cur;
+		}
+
+
+		public IEnumerable<ICell> Process(ICell[,] grid, Coordinates startCoord, Coordinates goalCoord)
+		{
+			InitData( grid, startCoord, goalCoord );
+
+			plannedNodes.AddLast( startCoord );
+			while ( plannedNodes.Count > 0 )
+			{
+				var cur = TakeMinimalHeuristic();
 
 				//если найденная - пункт назначения, то заканчиваем поиск и начинаем сборку пути
 				if ( cur == goalCoord )
 					break;
 
-				q.Remove( cur );
 
 				CellData curData = data.At( cur );
 				curData.processed = true;
@@ -75,10 +94,10 @@ namespace PathfindingAlgorithms.Algorithms
 				foreach ( Coordinates adj in adjList.Where( c => !data.At( c ).processed ) )
 				{
 					//определяем стоимость смежной вершины на основе уже пройденного пути
-					float score = curData.scoreCalc + Score( grid.At(cur), grid.At(adj) );
+					float score = curData.scoreCalc + Score( grid.At(adj) );
 
 					//если вершина не была посещена, или в неё можно прийти более коротким путём - обновляем информацию
-					bool notFound = !q.Contains( adj );
+					bool notFound = !plannedNodes.Contains( adj );
 					CellData adjData = data.At( adj );
 					if ( notFound || score < adjData.scoreCalc )
 					{
@@ -88,7 +107,7 @@ namespace PathfindingAlgorithms.Algorithms
 
 						//если вершина ещё не была посещена - запланируем посещение
 						if ( notFound )
-							q.AddLast( adj );
+							plannedNodes.AddLast( adj );
 					}
 				}
 			}
@@ -119,7 +138,7 @@ namespace PathfindingAlgorithms.Algorithms
 			return res;
 		}
 
-		static float CalcDistance(Coordinates from, Coordinates to)
+		static float EuclidianDistance(Coordinates from, Coordinates to)
 		{
 			return (float)Math.Sqrt( Math.Pow( from.X - to.X, 2 )
 				+ Math.Pow( from.Y - to.Y, 2 ) );
