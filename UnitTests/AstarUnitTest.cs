@@ -71,5 +71,23 @@ namespace UnitTests
             // arrange, act, assert
             new Astar().Process(null, new Coordinates(0, 0), new Coordinates(0, 1));
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void AstarOutOfRangeStartTest()
+        {
+            // arrange, act, assert
+            new Astar().Process(new Cell[2, 2], new Coordinates(4, 3), new Coordinates(1, 1));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void AstarOutOfRangeEndTest()
+        {
+            // arrange, act, assert
+            new Astar().Process(new Cell[2, 2], new Coordinates(1, 1), new Coordinates(-3, 3));
+        }
+
+
 	}
 }
