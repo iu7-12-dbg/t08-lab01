@@ -18,7 +18,9 @@ namespace GridViewer
 
 		class Cell : UserControl, ICell
 		{
-			static Color colorMatter = Color.Green, colorVoid = Color.DarkGray;
+			static Color colorGood = Color.Green,
+				colorBad = Color.LightGray,
+				colorVoid = Color.DimGray;
 
 			public bool Selected { get { return _selected; } set { _selected = value; Invalidate(); } }
 			bool _selected = false;
@@ -30,12 +32,17 @@ namespace GridViewer
 			{
 				Coordinates = new Coordinates( x, y );
 				Weight = w;
-
-				double r = colorMatter.R + w * (colorVoid.R - colorMatter.R);
-				double g = colorMatter.G + w * (colorVoid.G - colorMatter.G);
-				double b = colorMatter.B + w * (colorVoid.B - colorMatter.B);
-
-				this.BackColor = Color.FromArgb( (int)r, (int)g, (int)b );
+				if ( w >= 0 )
+				{
+					double r = colorGood.R + w * (colorBad.R - colorGood.R);
+					double g = colorGood.G + w * (colorBad.G - colorGood.G);
+					double b = colorGood.B + w * (colorBad.B - colorGood.B);
+					this.BackColor = Color.FromArgb( (int)r, (int)g, (int)b );
+				}
+				else
+				{
+					this.BackColor = colorVoid;
+				}
 
 				x = form.cellW * x;
 				y = form.cellH * y;
@@ -46,11 +53,12 @@ namespace GridViewer
 				lbl = new Label();
 				lbl.Location = new Point( 10,10 );
 				lbl.AutoSize = true;
-				lbl.Text = String.Format( "{0}", Weight );
+				lbl.Text = String.Format( "[{0}, {1}]\n\n\n        {2}", Coordinates.X, Coordinates.Y, Weight );
 				this.Controls.Add( lbl );
 				
 				Paint += Cell_Paint;
-				Click += Cell_Click;
+				Click += (_,__) => Selected = !Selected;
+				lbl.Click += (_, __) => OnClick(__);
 			}
 
 			public double Weight { get; set; }
@@ -59,7 +67,7 @@ namespace GridViewer
 
 			public override string ToString()
 			{
-				return String.Format( "[{0}, {1}]; {2}", Coordinates.X, Coordinates.Y, Weight );
+				return lbl.Text;
 			}
 
 			void Cell_Paint(object _, PaintEventArgs e)
@@ -76,10 +84,6 @@ namespace GridViewer
 																  ClientSize.Height-thickness ) );
 					}
 				}
-			}
-			void Cell_Click(object _, EventArgs __)
-			{
-				Selected = !Selected;
 			}
 		}
 
@@ -123,13 +127,19 @@ namespace GridViewer
 		{
 			InitGridData();
 
-			Random r = new Random();
+			Random rand = new Random();
 			for ( int x = 0; x < gridWcount; ++x )
 			{
 				for ( int y = 0; y < gridHcount; ++y )
 				{
-					int wInt = r.Next() % 6;
-					var c = new Cell( this, x, y, wInt / 5.0 );
+					int r = rand.Next();
+					double w;
+					if ( (r % 100) < 80 )
+						w = (r%6) / 5.0;
+					else
+						w = -1.0;
+
+					var c = new Cell( this, x, y, w );
 					c.Click +=
 						(_, __) => {
 							if ( startSelected == null)

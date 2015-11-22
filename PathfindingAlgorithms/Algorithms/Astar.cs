@@ -125,15 +125,22 @@ namespace PathfindingAlgorithms.Algorithms
 		//////////////////////////////////////////////////////////////////////////
 
 
+		static Coordinates? GetPassableNode(ICell[,] grid, int x, int y)
+		{
+			int xsize = grid.GetLength( 0 ), ysize = grid.GetLength( 1 );
+			if ( x >= 0 && x < xsize && y >= 0 && y < ysize && grid[x,y].Weight >= 0 )
+				return grid[x,y].Coordinates;
+			return null;
+		}
 		static List<Coordinates> GetAdjacent(ICell[,] grid, Coordinates at)
 		{
 			var res = new List<Coordinates>( 4 );
 
-			int xsize = grid.GetLength( 0 ), ysize = grid.GetLength( 1 );
-			if ( at.Y > 0 ) res.Add( grid[at.X,   at.Y-1].Coordinates );
-			if ( at.X > 0 ) res.Add( grid[at.X-1, at.Y].Coordinates );
-			if ( at.Y < ysize-1 ) res.Add( grid[at.X,   at.Y+1].Coordinates );
-			if ( at.X < xsize-1 ) res.Add( grid[at.X+1, at.Y].Coordinates );
+			Coordinates? c;
+			if ( (c = GetPassableNode( grid, at.X, at.Y-1 )).HasValue ) res.Add( c.Value );
+			if ( (c = GetPassableNode( grid, at.X-1, at.Y )).HasValue ) res.Add( c.Value );
+			if ( (c = GetPassableNode( grid, at.X, at.Y+1 )).HasValue ) res.Add( c.Value );
+			if ( (c = GetPassableNode( grid, at.X+1, at.Y )).HasValue ) res.Add( c.Value );
 
 			return res;
 		}
