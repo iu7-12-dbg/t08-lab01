@@ -31,9 +31,6 @@ namespace PathfindingAlgorithms.Algorithms
 		//точная оценка вершины
 		float Score(ICell c)
 		{
-			/*if ( to.Weight > 1 )
-				return 999999.0f;
-			else*/
 				return (float)c.Weight;
 		}
 
@@ -56,7 +53,6 @@ namespace PathfindingAlgorithms.Algorithms
 		//поиск в очереди запланированных вершины с наименьшей эвристической оценкой
 		Coordinates TakeMinimalHeuristic()
 		{
-			//находим в запланированных вершину с наименьшей эвристической стоимостью
 			Coordinates cur = plannedNodes.First.Value;
 			float minHeur = data.At( cur ).scoreHeur;
 			foreach ( Coordinates e in plannedNodes )
@@ -79,12 +75,12 @@ namespace PathfindingAlgorithms.Algorithms
 			plannedNodes.AddLast( startCoord );
 			while ( plannedNodes.Count > 0 )
 			{
+				//находим в запланированных вершину с наименьшей эвристической стоимостью
 				var cur = TakeMinimalHeuristic();
 
 				//если найденная - пункт назначения, то заканчиваем поиск и начинаем сборку пути
 				if ( cur == goalCoord )
 					break;
-
 
 				CellData curData = data.At( cur );
 				curData.processed = true;
