@@ -18,8 +18,9 @@ namespace PathfindingAlgorithms.Algorithms
 			public Coordinates cameFrom = nilCoord;
 		}
 
+		ICell[,] grid;
 		CellData[,] data;
-		Coordinates goalCoord;
+		Coordinates startCoord, goalCoord;
 		LinkedList<Coordinates> plannedNodes;
 
 		//эвристическая оценка вершины
@@ -36,7 +37,9 @@ namespace PathfindingAlgorithms.Algorithms
 
 		void InitData(ICell[,] grid, Coordinates startCoord, Coordinates goalCoord)
 		{
+			this.startCoord = startCoord;
 			this.goalCoord = goalCoord;
+			this.grid = grid;
 
 			int xsize = grid.GetLength( 0 ), ysize = grid.GetLength( 1 );
 			data = new CellData[xsize, ysize];
@@ -67,10 +70,30 @@ namespace PathfindingAlgorithms.Algorithms
 			return cur;
 		}
 
-
-		public IEnumerable<ICell> Process(ICell[,] grid, Coordinates startCoord, Coordinates goalCoord)
+		//сборка пути на основе собранных данных
+		IEnumerable<ICell> AssemblePath()
 		{
-			InitData( grid, startCoord, goalCoord );
+			var res = new LinkedList<ICell>();
+
+			var curCoord = goalCoord;
+			var curData = data.At(goalCoord);
+			while ( curData.cameFrom != nilCoord )
+			{
+				res.AddFirst( grid.At( curCoord ) );
+				curCoord = curData.cameFrom;
+				curData = data.At( curCoord );
+			}
+
+			if ( startCoord == goalCoord || res.Count > 0 )
+				res.AddFirst( grid.At( startCoord ) );
+
+			return res;
+		}
+
+
+		public IEnumerable<ICell> Process(ICell[,] cells, Coordinates from, Coordinates to)
+		{
+			InitData( cells, from, to );
 
 			plannedNodes.AddLast( startCoord );
 			while ( plannedNodes.Count > 0 )
@@ -108,14 +131,7 @@ namespace PathfindingAlgorithms.Algorithms
 				}
 			}
 
-			var res = new LinkedList<ICell>();
-			Coordinates pos = goalCoord;
-			while (pos != nilCoord)
-			{
-				res.AddFirst( grid.At(pos) );
-				pos = data.At(pos).cameFrom;
-			}
-			return res;
+			return AssemblePath();
 		}
 
 		//////////////////////////////////////////////////////////////////////////
