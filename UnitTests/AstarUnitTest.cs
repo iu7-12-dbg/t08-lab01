@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 
 using PathfindingAlgorithms.Algorithms;
 using PathfindingAlgorithms.Cells;
@@ -27,8 +28,8 @@ namespace UnitTests
 			}
 		}
 
-		int gridWidth = 4;
-		int gridHeight = 8;
+		int gridWidth = 5;
+		int gridHeight = 5;
 
 		ICell[,] GetTestGrid()
 		{
@@ -41,26 +42,39 @@ namespace UnitTests
 					r[x,y] = c;
 				}
 			}
+			int mid = gridWidth / 2;
+			for ( int y = 0; y < gridHeight; ++y )
+			{
+				r[mid, y].Weight = -1;
+			}
 			return r;
 		}
 
 		[TestMethod]
 		public void AstarTest()
 		{
-			var grid = GetTestGrid();
-
+			//arrange
 			var a = new PathfindingAlgorithms.Algorithms.Astar();
+			var grid = GetTestGrid();
+			Coordinates from = new Coordinates( 0, 0 ), to = new Coordinates( 0, gridHeight-1 );
+			//act
+			var path = a.Process( grid, from, to );
+			//assert
+			Assert.IsTrue( path.First().Coordinates == from, "LT-LB: first coord" );
+			Assert.IsTrue( path.Last().Coordinates == to, "LT-LB: last coord" );
 
-			var path = (LinkedList<ICell>)a.Process( grid, new Coordinates( 0, 0 ), new Coordinates( gridWidth-1, gridHeight-1 ) );
+			//act
+			path = a.Process( grid, from, from );
+			//assert
+			Assert.IsTrue( path.First().Coordinates == from, "Same-Same: first coord" );
+			Assert.IsTrue( path.Last().Coordinates == from, "Same-Same: last coord" );
 
-			Assert.IsTrue( path.First.Value.Coordinates == grid[0, 0].Coordinates, "LT-RB: first coord" );
-			Assert.IsTrue( path.Last.Value.Coordinates == grid[gridWidth-1, gridHeight-1].Coordinates, "LT-RB: last coord" );
-
-
-			path = (LinkedList<ICell>)a.Process( grid, new Coordinates( 1, 1 ), new Coordinates( 1, 1 ) );
-
-			Assert.IsTrue( path.First.Value.Coordinates == grid[1, 1].Coordinates, "Same-Same: first coord" );
-			Assert.IsTrue( path.Last.Value.Coordinates == grid[1, 1].Coordinates, "Same-Same: last coord" );
+			//arrange
+			to = new Coordinates( gridWidth-1, gridHeight-1 );
+			//act
+			path = a.Process( grid, from, to );
+			//assert
+			Assert.IsTrue( path.Count() == 0, "Empty path" );
 		}
 
         [TestMethod]
