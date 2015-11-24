@@ -64,7 +64,7 @@ namespace UnitTests
 		}
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [ExpectedException(typeof(System.NullReferenceException))]
         public void AstarNullCellMapTest()
         {
             // arrange, act, assert
@@ -72,19 +72,19 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        [ExpectedException(typeof(System.IndexOutOfRangeException))]
         public void AstarOutOfRangeStartTest()
         {
             // arrange, act, assert
-            new Astar().Process(new Cell[2, 2], new Coordinates(4, 3), new Coordinates(1, 1));
+            new Astar().Process(GetTestGrid(), new Coordinates(gridWidth, gridHeight), new Coordinates(1, 1));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+		[ExpectedException( typeof( System.IndexOutOfRangeException ) )]
         public void AstarOutOfRangeEndTest()
         {
             // arrange, act, assert
-            new Astar().Process(new Cell[2, 2], new Coordinates(1, 1), new Coordinates(-3, 3));
+            new Astar().Process(GetTestGrid(), new Coordinates(1, 1), new Coordinates(-1, 1));
         }
 
 
