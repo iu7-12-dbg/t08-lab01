@@ -9,13 +9,13 @@ namespace PathfindingAlgorithms.Algorithms
 {
 	public class Astar : IPathFindingAlgorithm
 	{
-		public static readonly Coordinates nilCoord = new Coordinates( -1, -1 );
+		public static Coordinates NilCoord { get; } = new Coordinates(-1, -1);
 
 		class CellData
 		{
 			public float scoreCalc = -1, scoreHeur = -1;
 			public bool processed  = false;
-			public Coordinates cameFrom = nilCoord;
+			public Coordinates cameFrom = NilCoord;
 		}
 
 		ICell[,] grid;
@@ -30,7 +30,7 @@ namespace PathfindingAlgorithms.Algorithms
 		}
 
 		//точная оценка вершины
-		float Score(ICell c)
+		static float Score(ICell c)
 		{
 				return (float)c.Weight;
 		}
@@ -77,7 +77,7 @@ namespace PathfindingAlgorithms.Algorithms
 
 			var curCoord = goalCoord;
 			var curData = data.At(goalCoord);
-			while ( curData.cameFrom != nilCoord )
+			while ( curData.cameFrom != NilCoord )
 			{
 				res.AddFirst( grid.At( curCoord ) );
 				curCoord = curData.cameFrom;
