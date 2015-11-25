@@ -122,7 +122,7 @@ namespace UnitTests
             var type = new PrivateType(typeof(Astar));
             var coord = new ValueCell(new Coordinates(), 0.3);
             // act
-            float res = (float) type.InvokeStatic("Score", new object[] { coord });
+            double res = (double) type.InvokeStatic("Score", new object[] { coord });
             // assert
             Assert.IsTrue(Math.Abs(res - coord.Weight) < 1e-7, "Weight and score must be equal!");
         }
