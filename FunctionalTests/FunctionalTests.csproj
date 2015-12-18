@@ -35,9 +35,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PathfindingAlgorithms">
-      <HintPath>..\PathfindingAlgorithms\bin\Debug\PathfindingAlgorithms.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <Choose>
@@ -55,6 +52,12 @@
   <ItemGroup>
     <Compile Include="FunstionalTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PathfindingAlgorithms\PathfindingAlgorithms.csproj">
+      <Project>{b9889b91-68a5-4e55-b029-2c9832739a93}</Project>
+      <Name>PathfindingAlgorithms</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

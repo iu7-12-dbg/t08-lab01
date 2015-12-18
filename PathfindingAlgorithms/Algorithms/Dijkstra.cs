@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PathfindingAlgorithms.Cells;
+using System.Diagnostics.Contracts;
 
 namespace PathfindingAlgorithms.Algorithms
 {
@@ -22,83 +23,82 @@ namespace PathfindingAlgorithms.Algorithms
             public Coordinates? prev;
         }
 
-        protected void CheckForeign(ICell[,] CM, DNode[,] D, Coordinates coords)
+        protected void CheckForeign(ICell[,] cm, DNode[,] d, Coordinates coords)
         {
             int f = coords.X, s = coords.Y;
             double w;
             //left
-            if ((f > 0) && (CM[f - 1, s].Weight >= 0))
+            if ((f > 0) && (cm[f - 1, s].Weight >= 0))
             {
-                w = CM[f - 1, s].Weight + D[f, s].val;
-                if (w < D[f - 1, s].val)
+                w = cm[f - 1, s].Weight + d[f, s].val;
+                if (w < d[f - 1, s].val)
                 {
-                    D[f - 1, s].val = w;
-                    D[f - 1, s].prev = coords;
+                    d[f - 1, s].val = w;
+                    d[f - 1, s].prev = coords;
                 }
             }
             //right
-            if ((f < CM.GetLength(0) - 1) && (CM[f + 1, s].Weight >= 0))
+            if ((f < cm.GetLength(0) - 1) && (cm[f + 1, s].Weight >= 0))
             {
-                w = CM[f + 1, s].Weight + D[f, s].val;
-                if (w < D[f + 1, s].val)
+                w = cm[f + 1, s].Weight + d[f, s].val;
+                if (w < d[f + 1, s].val)
                 {
-                    D[f + 1, s].val = w;
-                    D[f + 1, s].prev = coords;
+                    d[f + 1, s].val = w;
+                    d[f + 1, s].prev = coords;
                 }
             }
             //top
-            if ((s > 0) && (CM[f, s - 1].Weight >= 0))
+            if ((s > 0) && (cm[f, s - 1].Weight >= 0))
             {
-                w = CM[f, s - 1].Weight + D[f, s].val;
-                if (w < D[f, s - 1].val)
+                w = cm[f, s - 1].Weight + d[f, s].val;
+                if (w < d[f, s - 1].val)
                 {
-                    D[f, s - 1].val = w;
-                    D[f, s - 1].prev = coords;
+                    d[f, s - 1].val = w;
+                    d[f, s - 1].prev = coords;
                 }
             }
             //bottom
-            if ((s < CM.GetLength(1) - 1) && (CM[f, s + 1].Weight >= 0))
+            if ((s < cm.GetLength(1) - 1) && (cm[f, s + 1].Weight >= 0))
             {
-                w = CM[f, s + 1].Weight + D[f, s].val;
-                if (w < D[f, s + 1].val)
+                w = cm[f, s + 1].Weight + d[f, s].val;
+                if (w < d[f, s + 1].val)
                 {
-                    D[f, s + 1].val = w;
-                    D[f, s + 1].prev = coords;
+                    d[f, s + 1].val = w;
+                    d[f, s + 1].prev = coords;
                 }
             }
         }
 
-        protected Coordinates? FindMin(DNode[,] D)
+        protected Coordinates? FindMin(DNode[,] d)
         {
             bool foundfirst = false;
             Coordinates? min = null;
-            for (int i = 0; (i < D.GetLength(0)) && !foundfirst; i++)
-                for (int j = 0; (j < D.GetLength(1)) && !foundfirst; j++)
-                    if (!D[i, j].visited)
+            for (int i = 0; (i < d.GetLength(0)) && !foundfirst; i++)
+                for (int j = 0; (j < d.GetLength(1)) && !foundfirst; j++)
+                    if (!d[i, j].visited)
                     {
                         foundfirst = true;
                         min = new Coordinates(i, j);
                     }
             if (min.HasValue)
-                for (int i = 0; i < D.GetLength(0); i++)
-                    for (int j = 0; j < D.GetLength(1); j++)
-                        if ((!D[i, j].visited) && (D[i, j].val < D[min.Value.X, min.Value.Y].val))
+                for (int i = 0; i < d.GetLength(0); i++)
+                    for (int j = 0; j < d.GetLength(1); j++)
+                        if ((!d[i, j].visited) && (d[i, j].val < d[min.Value.X, min.Value.Y].val))
                             min = new Coordinates(i, j);
             return min;
         }
 
-        public IEnumerable<ICell> Process(ICell[,] CellMap, Coordinates start, Coordinates end)
+        public IEnumerable<ICell> Process(ICell[,] cellMap, Coordinates start, Coordinates end)
         {
-            if (start.X < 0 || start.Y < 0 || start.X >= CellMap.GetLength(0) || start.Y >= CellMap.GetLength(1))
-                throw new ArgumentOutOfRangeException("start");
-            if (end.X < 0 || end.Y < 0 || end.X >= CellMap.GetLength(0) || end.Y >= CellMap.GetLength(1))
-                throw new ArgumentOutOfRangeException("end");
+            Contract.Requires(cellMap != null);
+            Contract.Requires(start.Inside(new Coordinates(cellMap.GetLength(0), cellMap.GetLength(1))));
+            Contract.Requires(end.Inside(new Coordinates(cellMap.GetLength(0), cellMap.GetLength(1))));
 
-            DNode[,] dist = new DNode[CellMap.GetLength(0), CellMap.GetLength(1)];
+            DNode[,] dist = new DNode[cellMap.GetLength(0), cellMap.GetLength(1)];
 
-            int count = CellMap.GetLength(0) * CellMap.GetLength(1);
-            for (int i = 0; i < CellMap.GetLength(0); ++i)
-                for (int j = 0; j < CellMap.GetLength(1); ++j)
+            int count = cellMap.GetLength(0) * cellMap.GetLength(1);
+            for (int i = 0; i < cellMap.GetLength(0); ++i)
+                for (int j = 0; j < cellMap.GetLength(1); ++j)
                     dist[i, j] = new DNode();
 
             dist[start.X, start.Y].val = 0;
@@ -109,7 +109,7 @@ namespace PathfindingAlgorithms.Algorithms
                 min = FindMin(dist);
                 if (min.HasValue)
                 {
-                    CheckForeign(CellMap, dist, min.Value);
+                    CheckForeign(cellMap, dist, min.Value);
                     dist[min.Value.X, min.Value.Y].visited = true;
                 }
             } while (min.HasValue);
@@ -126,12 +126,12 @@ namespace PathfindingAlgorithms.Algorithms
             if (waylen > 0)
             {
                 ICell[] res = new ICell[waylen + 1];
-                res[waylen] = CellMap[end.X, end.Y];
+                res[waylen] = cellMap[end.X, end.Y];
                 int i = waylen - 1;
                 dnode = dist[end.X, end.Y];
                 while (dnode.prev.HasValue)
                 {
-                    res[i--] = CellMap[dnode.prev.Value.X, dnode.prev.Value.Y];
+                    res[i--] = cellMap[dnode.prev.Value.X, dnode.prev.Value.Y];
                     dnode = dist[dnode.prev.Value.X, dnode.prev.Value.Y];
                 }
                 return res;

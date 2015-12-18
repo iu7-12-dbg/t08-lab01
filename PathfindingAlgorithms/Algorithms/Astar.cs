@@ -4,18 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PathfindingAlgorithms.Cells;
+using System.Diagnostics.Contracts;
 
 namespace PathfindingAlgorithms.Algorithms
 {
 	public class Astar : IPathFindingAlgorithm
 	{
-		public static Coordinates NilCoord { get; } = new Coordinates(-1, -1);
+		private static readonly Coordinates nilCoord = new Coordinates(-1, -1);
 
 		class CellData
 		{
 			public double scoreCalc = -1, scoreHeur = -1;
 			public bool processed  = false;
-			public Coordinates cameFrom = NilCoord;
+			public Coordinates cameFrom = nilCoord;
 		}
 
 		ICell[,] grid;
@@ -77,7 +78,7 @@ namespace PathfindingAlgorithms.Algorithms
 
 			var curCoord = goalCoord;
 			var curData = data.At(goalCoord);
-			while ( curData.cameFrom != NilCoord )
+			while ( curData.cameFrom != nilCoord )
 			{
 				res.AddFirst( grid.At( curCoord ) );
 				curCoord = curData.cameFrom;
@@ -93,6 +94,10 @@ namespace PathfindingAlgorithms.Algorithms
 
 		public IEnumerable<ICell> Process(ICell[,] cells, Coordinates from, Coordinates to)
 		{
+            Contract.Requires(cells != null);
+            Contract.Requires(from.Inside(new Coordinates(cells.GetLength(0), cells.GetLength(1))));
+            Contract.Requires(to.Inside(new Coordinates(cells.GetLength(0), cells.GetLength(1))));
+
 			InitData( cells, from, to );
 
 			plannedNodes.AddLast( startCoord );
