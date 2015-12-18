@@ -28,8 +28,8 @@ namespace FunctionalTests
             }
         }
 
-        int gridWidth = 5;
-        int gridHeight = 5;
+        const int gridWidth = 5;
+        const int gridHeight = 5;
 
         ICell[,] GetTestGrid()
         {
@@ -69,10 +69,30 @@ namespace FunctionalTests
                     r[x, y] = c;
                 }
             }
-            int mid = gridWidth / 2;
-            for (int y = 0; y < gridHeight; ++y)
+            return r;
+        }
+
+        ICell[,] GetRandomGrid()
+        {
+            var rand = new Random();
+            int gridWidth = rand.Next(1, 10);
+            int gridLength = rand.Next(1, 10);
+            var r = new ICell[gridWidth, gridHeight];
+
+            for (int x = 0; x < gridWidth; ++x)
             {
-                r[mid, y].Weight = -1;
+                for (int y = 0; y < gridHeight; ++y)
+                {
+                    int ra = rand.Next();
+                    double w;
+                    if ((ra % 100) < 80)
+                        w = (ra % 6) / 5.0;
+                    else
+                        w = -1.0;
+                    var c = new Cell(x, y);
+                    c.Weight = w;
+                    r[x, y] = c;
+                }
             }
             return r;
         }
@@ -148,7 +168,7 @@ namespace FunctionalTests
             IEnumerable<ICell> path1, path2;
             Coordinates from = new Coordinates(0, 0), to = new Coordinates(gridWidth - 1, gridHeight - 1);
 
-            grid = GetRandomGrid(15);
+            grid = GetRandomGrid(16);
             path1 = a.Process(grid, from, to);
             path2 = d.Process(grid, from, to);
             l1 = PathLen(path1);
@@ -176,6 +196,24 @@ namespace FunctionalTests
 
         [TestMethod]
         public void PathLenTest5()
+        {
+            var a = new Astar();
+            var d = new Dijkstra();
+            double l1, l2;
+            ICell[,] grid;
+            IEnumerable<ICell> path1, path2;
+            Coordinates from = new Coordinates(0, 0), to = new Coordinates(gridWidth - 1, gridHeight - 1);
+
+            grid = GetRandomGrid(0xEDA);
+            path1 = a.Process(grid, from, to);
+            path2 = d.Process(grid, from, to);
+            l1 = PathLen(path1);
+            l2 = PathLen(path2);
+            Assert.IsTrue(l1 == l2, "path length. A* = " + l1.ToString() + " Dijkstra = " + l2.ToString());
+        }
+
+        [TestMethod]
+        public void RandomPathTest()
         {
             var a = new Astar();
             var d = new Dijkstra();
