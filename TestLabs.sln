@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PathFinder", "PathFinder\PathFinder.csproj", "{2AA9A17B-A275-4570-82C1-3E36A0B14F08}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PathfindingAlgorithms", "PathfindingAlgorithms\PathfindingAlgorithms.csproj", "{B9889B91-68A5-4E55-B029-2C9832739A93}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GridViewer", "GridViewer\GridViewer.csproj", "{65DB5314-218F-49B6-A716-7BBBCE93C4B0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunctionalTests", "FunctionalTests\FunctionalTests.csproj", "{E728AB26-445D-461A-870C-A1A8E1BF09E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{65DB5314-218F-49B6-A716-7BBBCE93C4B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65DB5314-218F-49B6-A716-7BBBCE93C4B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65DB5314-218F-49B6-A716-7BBBCE93C4B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E728AB26-445D-461A-870C-A1A8E1BF09E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E728AB26-445D-461A-870C-A1A8E1BF09E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E728AB26-445D-461A-870C-A1A8E1BF09E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E728AB26-445D-461A-870C-A1A8E1BF09E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
