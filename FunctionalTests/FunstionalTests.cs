@@ -85,7 +85,7 @@ namespace FunctionalTests
             }
             else
             {
-                return path.Aggregate(0.0, (acc, cell) => acc + cell.Weight);
+                return path.Sum(x => x.Weight);
             }
         }
 
@@ -104,6 +104,7 @@ namespace FunctionalTests
             Assert.IsTrue(path1.First().Coordinates == path2.First().Coordinates, "first coord");
             Assert.IsTrue(path1.Last().Coordinates == path2.Last().Coordinates, "last coord");
         }
+
         [TestMethod]
         public void PathLenTest1()
         {
@@ -122,7 +123,6 @@ namespace FunctionalTests
         [TestMethod]
         public void PathLenTest2()
         {
-
             var a = new Astar();
             var d = new Dijkstra();
             double l1, l2;
@@ -130,25 +130,60 @@ namespace FunctionalTests
             IEnumerable<ICell> path1, path2;
             Coordinates from = new Coordinates(0, 0), to = new Coordinates(gridWidth - 1, gridHeight - 1);
 
-
             grid = GetRandomGrid(0);
             path1 = a.Process(grid, from, to);
             path2 = d.Process(grid, from, to);
             l1 = PathLen(path1);
             l2 = PathLen(path2);
             Assert.IsTrue(l1 == l2, "path length. A* = " + l1.ToString() + " Dijkstra = " + l2.ToString());
+        }
+
+        [TestMethod]
+        public void PathLenTest3()
+        {
+            var a = new Astar();
+            var d = new Dijkstra();
+            double l1, l2;
+            ICell[,] grid;
+            IEnumerable<ICell> path1, path2;
+            Coordinates from = new Coordinates(0, 0), to = new Coordinates(gridWidth - 1, gridHeight - 1);
+
             grid = GetRandomGrid(15);
             path1 = a.Process(grid, from, to);
             path2 = d.Process(grid, from, to);
             l1 = PathLen(path1);
             l2 = PathLen(path2);
             Assert.IsTrue(l1 == l2, "path length. A* = " + l1.ToString() + " Dijkstra = " + l2.ToString());
+        }
+
+        [TestMethod]
+        public void PathLenTest4()
+        {
+            var a = new Astar();
+            var d = new Dijkstra();
+            double l1, l2;
+            ICell[,] grid;
+            IEnumerable<ICell> path1, path2;
+            Coordinates from = new Coordinates(0, 0), to = new Coordinates(gridWidth - 1, gridHeight - 1);
+
             grid = GetRandomGrid(22);
             path1 = a.Process(grid, from, to);
             path2 = d.Process(grid, from, to);
             l1 = PathLen(path1);
             l2 = PathLen(path2);
             Assert.IsTrue(l1 == l2, "path length. A* = " + l1.ToString() + " Dijkstra = " + l2.ToString());
+        }
+
+        [TestMethod]
+        public void PathLenTest5()
+        {
+            var a = new Astar();
+            var d = new Dijkstra();
+            double l1, l2;
+            ICell[,] grid;
+            IEnumerable<ICell> path1, path2;
+            Coordinates from = new Coordinates(0, 0), to = new Coordinates(gridWidth - 1, gridHeight - 1);
+
             grid = GetRandomGrid(0xEDA);
             path1 = a.Process(grid, from, to);
             path2 = d.Process(grid, from, to);
