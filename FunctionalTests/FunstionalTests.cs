@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 
-using PathfindingAlgorithms.Algorithms;
+using PathfindingAlgorithms.Algorithms.Astar;
 using PathfindingAlgorithms.Cells;
+using PathfindingAlgorithms.Algorithms;
 
 namespace FunctionalTests
 {

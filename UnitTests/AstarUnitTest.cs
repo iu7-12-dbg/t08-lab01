@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 
-using PathfindingAlgorithms.Algorithms;
+using PathfindingAlgorithms.Algorithms.Astar;
 using PathfindingAlgorithms.Cells;
 
 namespace UnitTests
@@ -54,7 +54,7 @@ namespace UnitTests
 		public void AstarPathFoundTest()
 		{
 			//arrange
-			var a = new PathfindingAlgorithms.Algorithms.Astar();
+			var a = new PathfindingAlgorithms.Algorithms.Astar.Astar();
 			var grid = GetTestGrid();
 			Coordinates from = new Coordinates( 0, 0 ), to = new Coordinates( 0, gridHeight-1 );
 			//act
@@ -68,7 +68,7 @@ namespace UnitTests
         public void AstarSameCoordinatesTest()
         {
             // arrange
-            var a = new PathfindingAlgorithms.Algorithms.Astar();
+            var a = new PathfindingAlgorithms.Algorithms.Astar.Astar();
             var grid = GetTestGrid();
             var coord = new Coordinates(0, 0);
             // act
@@ -82,7 +82,7 @@ namespace UnitTests
         public void AstarEmptyPathTest()
         {
             // arrange
-            var a = new PathfindingAlgorithms.Algorithms.Astar();
+            var a = new PathfindingAlgorithms.Algorithms.Astar.Astar();
             var grid = GetTestGrid();
             Coordinates from = new Coordinates(0, 0), to = new Coordinates(gridWidth - 1, gridHeight - 1);
             // act

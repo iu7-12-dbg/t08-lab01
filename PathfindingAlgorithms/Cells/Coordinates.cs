@@ -8,9 +8,9 @@ namespace PathfindingAlgorithms.Cells
 {
     public struct Coordinates : IEquatable<Coordinates>
     { 
-        public int X { get; set; }
+        public int X { get; }
 
-        public int Y { get; set; }
+        public int Y { get; }
 
         public Coordinates(int x, int y)
 			: this()

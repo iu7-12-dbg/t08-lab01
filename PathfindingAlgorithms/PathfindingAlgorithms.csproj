@@ -41,7 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Algorithms\Astar.cs" />
+    <Compile Include="Algorithms\Astar\Astar.cs" />
+    <Compile Include="Algorithms\Astar\EuclidianHeuristic.cs" />
+    <Compile Include="Algorithms\Astar\IAdjacement.cs" />
+    <Compile Include="Algorithms\Astar\IHeuristic.cs" />
+    <Compile Include="Algorithms\Astar\ManhattanHeuristic.cs" />
+    <Compile Include="Algorithms\Astar\StraightAdjacement.cs" />
     <Compile Include="Algorithms\Dijkstra.cs" />
     <Compile Include="Cells\ValueCell.cs" />
     <Compile Include="MatrixExtension.cs" />

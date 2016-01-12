@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using PathfindingAlgorithms.Algorithms;
+using PathfindingAlgorithms.Algorithms.Astar;
 using PathfindingAlgorithms.Cells;
 
 namespace GridViewer
