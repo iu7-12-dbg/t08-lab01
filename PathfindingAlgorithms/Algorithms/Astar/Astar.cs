@@ -85,11 +85,7 @@ namespace PathfindingAlgorithms.Algorithms.Astar
             }
             catch (KeyNotFoundException)
             {
-                throw new ArgumentOutOfRangeException();
-            }
-            catch (Exception)
-            {
-                throw;
+                throw new IndexOutOfRangeException();
             }
         }
 
