@@ -53,6 +53,9 @@
   <ItemGroup>
     <Compile Include="AstarUnitTest.cs" />
     <Compile Include="CoordinatesUnitTest.cs" />
+    <Compile Include="Mocs\DownAdjacement.cs" />
+    <Compile Include="Mocs\EmptyAdjacement.cs" />
+    <Compile Include="Mocs\EmptyHeuristic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

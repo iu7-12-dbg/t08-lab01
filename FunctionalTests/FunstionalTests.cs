@@ -113,7 +113,7 @@ namespace FunctionalTests
         public void PathEndpointsTest()
         {
             //arrange
-            var a = new Astar();
+            var a = new Astar(new EuclidianHeuristic(), new StraightAdjacement());
             var d = new Dijkstra();
             var grid = GetTestGrid();
             Coordinates from = new Coordinates(0, 0), to = new Coordinates(0, gridHeight - 1);
@@ -129,7 +129,7 @@ namespace FunctionalTests
         public void PathLenTest1()
         {
             //arrange
-            var a = new Astar();
+            var a = new Astar(new EuclidianHeuristic(), new StraightAdjacement());
             var d = new Dijkstra();
             var grid = GetTestGrid();
             Coordinates from = new Coordinates(0, 0), to = new Coordinates(0, gridHeight - 1);
@@ -143,7 +143,7 @@ namespace FunctionalTests
         [TestMethod]
         public void PathLenTest2()
         {
-            var a = new Astar();
+            var a = new Astar(new EuclidianHeuristic(), new StraightAdjacement());
             var d = new Dijkstra();
             double l1, l2;
             ICell[,] grid;
@@ -161,7 +161,7 @@ namespace FunctionalTests
         [TestMethod]
         public void PathLenTest3()
         {
-            var a = new Astar();
+            var a = new Astar(new EuclidianHeuristic(), new StraightAdjacement());
             var d = new Dijkstra();
             double l1, l2;
             ICell[,] grid;
@@ -179,7 +179,7 @@ namespace FunctionalTests
         [TestMethod]
         public void PathLenTest4()
         {
-            var a = new Astar();
+            var a = new Astar(new EuclidianHeuristic(), new StraightAdjacement());
             var d = new Dijkstra();
             double l1, l2;
             ICell[,] grid;
@@ -197,7 +197,7 @@ namespace FunctionalTests
         [TestMethod]
         public void PathLenTest5()
         {
-            var a = new Astar();
+            var a = new Astar(new EuclidianHeuristic(), new StraightAdjacement());
             var d = new Dijkstra();
             double l1, l2;
             ICell[,] grid;
@@ -216,7 +216,7 @@ namespace FunctionalTests
         public void RandomPathTest()
         {
             var rand = new Random();
-            var a = new Astar();
+            var a = new Astar(new EuclidianHeuristic(), new StraightAdjacement());
             var d = new Dijkstra();
             double l1 = 0, l2 = 0;
             ICell[,] grid;
