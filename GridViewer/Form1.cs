@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using PathfindingAlgorithms.Algorithms.Astar;
 using PathfindingAlgorithms.Cells;
 
 namespace GridViewer
 {
-	public partial class Form1 : Form
+    public partial class Form1 : Form
 	{
 		int allwidth, allheight, cellW, cellH;
 		int gridWcount = 8, gridHcount = 5;
@@ -118,7 +114,7 @@ namespace GridViewer
 		Coordinates start, goal;
 		Cell startSelected = null;
 		ICell[,] cells;
-		Astar astar = new Astar();
+		Astar astar = new Astar(new EuclidianHeuristic(), new StraightAdjacement());
 
 		IEnumerable<ICell> pathCells = null;
 		List<PathNode> path = new List<PathNode>();

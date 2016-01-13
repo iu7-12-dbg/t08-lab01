@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using PathfindingAlgorithms.Cells;
 using System.Diagnostics.Contracts;
 
 namespace PathfindingAlgorithms.Algorithms.Astar
 {
-	public sealed class Astar : IPathFindingAlgorithm
+    public sealed class Astar : IPathFindingAlgorithm
     { 
 		class CellData
 		{
