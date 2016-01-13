@@ -38,49 +38,59 @@ namespace PathfindingAlgorithms.Algorithms.Astar
 
         public IEnumerable<ICell> Process(ICell[,] cells, Coordinates from, Coordinates to)
         {
-            Contract.Requires(cells != null);
-            Contract.Requires(from.Inside(new Coordinates(cells.GetLength(0), cells.GetLength(1))));
-            Contract.Requires(to.Inside(new Coordinates(cells.GetLength(0), cells.GetLength(1))));
-
-            InitData(cells, from, to);
-
-            plannedNodes.Add(startCoord);
-            while (plannedNodes.Count > 0)
+            try
             {
-                //находим в запланированных вершину с наименьшей эвристической стоимостью
-                var cur = TakeMinimalHeuristic();
+                Contract.Requires(cells != null);
+                Contract.Requires(from.Inside(new Coordinates(cells.GetLength(0), cells.GetLength(1))));
+                Contract.Requires(to.Inside(new Coordinates(cells.GetLength(0), cells.GetLength(1))));
 
-                //если найденная - пункт назначения, то заканчиваем поиск и начинаем сборку пути
-                if (cur == goalCoord)
-                    break;
+                InitData(cells, from, to);
 
-                CellData curData = data[cur];
-                curData.processed = true;
-
-                //рассматриваем все с ней смежные, необработанные ранее
-                var adjList = adjacement.Adjacement(grid, cur);
-                foreach (Coordinates adj in adjList.Where(c => !data[c].processed))
+                plannedNodes.Add(startCoord);
+                while (plannedNodes.Count > 0)
                 {
-                    //определяем стоимость смежной вершины на основе уже пройденного пути
-                    double score = curData.scoreCalc + Score(grid.At(adj));
+                    //находим в запланированных вершину с наименьшей эвристической стоимостью
+                    var cur = TakeMinimalHeuristic();
 
-                    //если вершина не была посещена, или в неё можно прийти более коротким путём - обновляем информацию
-                    bool notFound = !plannedNodes.Contains(adj);
-                    CellData adjData = data[adj];
-                    if (notFound || score < adjData.scoreCalc)
+                    //если найденная - пункт назначения, то заканчиваем поиск и начинаем сборку пути
+                    if (cur == goalCoord)
+                        break;
+
+                    CellData curData = data[cur];
+                    curData.processed = true;
+
+                    //рассматриваем все с ней смежные, необработанные ранее
+                    var adjList = adjacement.Adjacement(grid, cur);
+                    foreach (Coordinates adj in adjList.Where(c => !data[c].processed))
                     {
-                        adjData.cameFrom = cur;
-                        adjData.scoreCalc = score;
-                        adjData.scoreHeur = score + Heuristic(grid.At(adj));
+                        //определяем стоимость смежной вершины на основе уже пройденного пути
+                        double score = curData.scoreCalc + Score(grid.At(adj));
 
-                        //если вершина ещё не была посещена - запланируем посещение
-                        if (notFound)
-                            plannedNodes.Add(adj);
+                        //если вершина не была посещена, или в неё можно прийти более коротким путём - обновляем информацию
+                        bool notFound = !plannedNodes.Contains(adj);
+                        CellData adjData = data[adj];
+                        if (notFound || score < adjData.scoreCalc)
+                        {
+                            adjData.cameFrom = cur;
+                            adjData.scoreCalc = score;
+                            adjData.scoreHeur = score + Heuristic(grid.At(adj));
+
+                            //если вершина ещё не была посещена - запланируем посещение
+                            if (notFound)
+                                plannedNodes.Add(adj);
+                        }
                     }
                 }
+                return AssemblePath();
             }
-
-            return AssemblePath();
+            catch (KeyNotFoundException)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         private void InitData(ICell[,] grid, Coordinates startCoord, Coordinates goalCoord)
