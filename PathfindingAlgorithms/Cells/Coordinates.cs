@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace PathfindingAlgorithms.Cells
 {
@@ -84,5 +85,10 @@ namespace PathfindingAlgorithms.Cells
 		{
 			return a.X != b.X || a.Y != b.Y;
 		}
+
+        public override string ToString()
+        {
+            return $"X = {X}, Y = {Y}";
+        }
     }
 }

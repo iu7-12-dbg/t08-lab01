@@ -24,7 +24,7 @@ namespace UnitTests
 
 			public override string ToString()
 			{
-				return String.Format( "[{0}, {1}]; {2}", Coordinates.X, Coordinates.Y, Weight );
+                return $"{Coordinates}, {Weight}";
 			}
 		}
 
