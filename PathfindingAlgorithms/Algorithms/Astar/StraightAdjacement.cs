@@ -25,7 +25,7 @@ namespace PathfindingAlgorithms.Algorithms.Astar
         private static Coordinates? TestNode(ICell[,] grid, int x, int y)
         {
             int xsize = grid.GetLength(0), ysize = grid.GetLength(1);
-            if (x >= 0 && x < xsize && y >= 0 && y < ysize && grid[x, y].Weight >= 0 && grid[x, y].Weight < 1)
+            if (x >= 0 && x < xsize && y >= 0 && y < ysize && grid[x, y].Weight >= 0 && grid[x, y].Weight <= 1)
                 return grid[x, y].Coordinates;
             return null;
         }
